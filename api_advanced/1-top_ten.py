@@ -1,21 +1,22 @@
 #!/usr/bin/python3
-"""Return the number of subscribers for a given subreddit"""
+"""Print the titles of the first 10Hot Posts"""
 import requests
 
-def number_of_subscribers(subreddit):
-    """Return the number of subscribers for a given subreddit"""
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    headers = {'User-Agent': 'My User Agent 1.0'}
-    
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Will raise an HTTPError for bad responses (4xx and 5xx)
-        data = response.json()
-        
-        # Extracting the number of subscribers
-        subscribers = data.get('data', {}).get('subscribers', 0)
-        return subscribers
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-        return 0
 
+def top_ten(subreddit):
+    """The top ten titles"""
+    headers = {'User-Agent': 'MyAPI/0.0.1'}
+    url = "https://reddit.com/r/{}.json".format(subreddit)
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        json_data = response.json()
+        for i in range(10):
+            print(
+                    json_data.get('data')
+                    .get('children')[i]
+                    .get('data')
+                    .get('title')
+                )
+    else:
+        print(None)
