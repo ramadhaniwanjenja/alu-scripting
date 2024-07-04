@@ -1,22 +1,27 @@
 #!/usr/bin/python3
-"""Return the number of subscribers for a given subreddit"""
+"""
+function that queries the 'Reddit API' and returns the number of subscribers
+"""
 import requests
 
 
 def number_of_subscribers(subreddit):
-    """Return the number of subscribers for a given subreddit"""
+    """
+    number of subscribers
+    """
     url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    headers = {'User-Agent': 'My User Agent 1.0'}
-    
-    try:
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Will raise an HTTPError for bad responses (4xx and 5xx)
-        data = response.json()
-        
-        # Extracting the number of subscribers
-        subscribers = data.get('data', {}).get('subscribers', 0)
-        return subscribers
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+    headers = {"User-Agent": "MyBot/1.0"}  # avoid Too Many Requests error
+    response = requests.get(url, headers=headers, allow_redirects=False)
+
+    if response.status_code == 200:
+        data = response.json()["data"]
+        return data["subscribers"]
+    else:
         return 0
+
+
+if __name__ == "__main__":
+    subreddit = "python"  # Change this to the subreddit you want to test
+    subscribers = number_of_subscribers(subreddit)
+    print(subscribers)
 
